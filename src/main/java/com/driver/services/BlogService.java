@@ -9,12 +9,12 @@ import com.driver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class BlogService {
+
     @Autowired
     BlogRepository blogRepository1;
 
@@ -22,12 +22,18 @@ public class BlogService {
     UserRepository userRepository1;
 
     public Blog createAndReturnBlog(Integer userId, String title, String content) {
-        //create a blog at the current time
-
+        User user = userRepository1.findById(userId).orElse(null);
+        if (user != null) {
+            Blog blog = new Blog(title, content, user);
+            return blogRepository1.save(blog);
+        }
+        return null;
     }
 
-    public void deleteBlog(int blogId){
-        //delete blog and corresponding images
-
+    public void deleteBlog(int blogId) {
+        Blog blog = blogRepository1.findById(blogId).orElse(null);
+        if (blog != null) {
+            blogRepository1.deleteById(blogId);
+        }
     }
 }
